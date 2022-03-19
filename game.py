@@ -49,7 +49,7 @@ sleeping_quarters.items.add(lantern)
 #VARIABLES
 ##########################
 current_room = front_garden
-chest_open = False
+chest = False
 lantern = False
 door = False
 
@@ -58,8 +58,8 @@ door = False
 ##########################
 @when("open chest")
 @when("chest")
-def open_chest():
-	if current_room == ruined_tower and chest_open == False:
+def the_chest():
+	if current_room == ruined_tower and chest == False:
 		print("you open the chest and see a key")
 		chest_open = True 
 		ruined_tower.items.add(key)
@@ -67,7 +67,7 @@ def open_chest():
 		print("you have already opened the chest")
 	else:
 		print("there is no chest here ")
-@when("DIRECTION")
+
 @when("go DIRECTION")
 @when("travel DIRECTION")
 def travel(direction):
