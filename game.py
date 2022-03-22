@@ -52,13 +52,18 @@ current_room = front_garden
 chest_open = False
 lantern = False
 door = False
-
+draws_checked = False
+inventory = Bag()
 ##########################
 #Binds
 ##########################
+
+
+
 @when("open chest")
 @when("chest")
 def open_chest():
+	global chest_open
 	if current_room == ruined_tower and chest_open == False:
 		print("you open the chest and see a key")
 		chest_open = True 
@@ -67,14 +72,26 @@ def open_chest():
 		print("you have already opened the chest")
 	else:
 		print("there is no chest here ")
-@when("DIRECTION")
+
+@when("check drawers")
+@when("drawers")
+def open_draws():
+	global draws_checked
+	if current_room == dining_room and draws_checked == False:
+		print("you open the drawers and see a lantern")
+		draws_checked = True 
+		dining_room.items.add(lantern)
+	elif current_room == dining_room and draws_checked == True:
+		print("you have already opened the drawers")
+	else:
+		print("there are no drawers here ")
+
+
 @when("go DIRECTION")
 @when("travel DIRECTION")
 def travel(direction):
 	global current_room
 	if  direction in current_room.exits():
-		#checks if the current room list of exits
-		#has the diorection the player wants to go
 		current_room = current_room.exit(direction)
 		print(f"you go {direction}")
 		print(current_room)
@@ -112,3 +129,10 @@ def main():
     
 
 main()
+
+
+
+
+
+
+
