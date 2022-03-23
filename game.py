@@ -27,7 +27,7 @@ east_field.north = ruined_tower
 west_field.north = front_yard
 front_yard.east = castle_door
 ruined_tower.west = castle_door	
-castle_door.north = courtyard
+
 courtyard.west = dining_room
 courtyard.east = sleeping_quarters
 sleeping_quarters.north = dungeon
@@ -51,9 +51,9 @@ sleeping_quarters.items.add(lantern)
 current_room = front_garden
 chest_open = False
 lantern = False
-door = False
 draws_checked = False
 inventory = Bag()
+used_key = False
 ##########################
 #Binds
 ##########################
@@ -77,10 +77,12 @@ def open_chest():
 @when("drawers")
 def open_draws():
 	global draws_checked
+	global lantern
 	if current_room == dining_room and draws_checked == False:
 		print("you open the drawers and see a lantern")
 		draws_checked = True 
 		dining_room.items.add(lantern)
+		lantern = True
 	elif current_room == dining_room and draws_checked == True:
 		print("you have already opened the drawers")
 	else:
@@ -117,11 +119,21 @@ def get_item(item):
 	else:
 		print(f"you dont see a {item}")
 
+@when("use ITEM")
+def use(item):
+	if item == "key" and current_room == castle_door:
+		print("you use the key and the door opens")
+		used_key = True 
+		castle_door.north = courtyard
+
 @when("inventory")
 def check_inventory():
 	print("you are carrying")
 	for item in inventory:
 		print(item)
+
+
+
 
 def main():
 	print(current_room)
