@@ -14,10 +14,9 @@ front_yard = Room("you are in a field with flower bushes an green grass, theres 
 ruined_tower = Room("you are surrouned by rubble and the walls are riddled wiht bullet holes, there are guns and a chest in the corner")
 castle_door = Room("Castle Door.  locked, you need a key")
 courtyard = Room("theres a withered tree in the middle and some bushes and flowers surrounded the tree")
-sleeping_quarters = Room("there are rows and roowsa of bunk-bedsalong with bedside tables and a creepy flickering light")
+sleeping_quarters = Room("you need a light source to be able to see in this room")
 dining_room = Room("there is a large table with many chairs surrounding it, there is also a set of drawers")
-dungeon = Room("This is a dungeon, there is torture equipment and knifes")
-
+dungeon = Room("This is a dungeon. you will need a light")
 ##########################
 #ROOM CONNECTIONS
 ##########################
@@ -43,21 +42,18 @@ key.description = "you look at the key and see that 'castle doors' is etched int
 lantern = Item("lantern","light","torch")
 lantern.description = "it is a lantern,it emmits light to be able to see things in dark rooms"
 
-sleeping_quarters.items.add(lantern)
 
 ##########################
 #VARIABLES
 ##########################
 current_room = front_garden
 chest_open = False
-lantern = False
 draws_checked = False
 inventory = Bag()
 used_key = False
 ##########################
 #Binds
 ##########################
-
 
 
 @when("open chest")
@@ -77,12 +73,10 @@ def open_chest():
 @when("drawers")
 def open_draws():
 	global draws_checked
-	global lantern
 	if current_room == dining_room and draws_checked == False:
 		print("you open the drawers and see a lantern")
 		draws_checked = True 
 		dining_room.items.add(lantern)
-		lantern = True
 	elif current_room == dining_room and draws_checked == True:
 		print("you have already opened the drawers")
 	else:
@@ -125,6 +119,29 @@ def use(item):
 		print("you use the key and the door opens")
 		used_key = True 
 		castle_door.north = courtyard
+
+
+
+@when("bookcase")
+def bookcase():
+	if current_room == sleeping_quarters:
+		print("you move the book case a see a stair case")
+		sleeping_quarters.north = dungeon
+		sleeping_quarters.west = ""
+
+@when("use lantern")
+@when("use light")
+def use_lantern():
+	if current_room == sleeping_quarters and draws_checked == True:
+		Print("you see a BOOKCASE in the corner and some rows of beds")
+	elif current_room == dungeon and draws_checked == True:
+		print("you see knives and a fresh dead body in the corner")
+	elif current_room == dungeon or sleeping_quarters and draws_checked == False:
+		print("you do not have any source of light")
+	else:
+		Print("you cant do that here")
+
+
 
 @when("inventory")
 def check_inventory():
