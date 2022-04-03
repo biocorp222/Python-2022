@@ -2,14 +2,13 @@
 #IMPORTS
 ########################
 from adventurelib import *
-
+from playsound import playsound
 #######################
 #DEFINE ROOMS
 #######################
 Room.items = Bag()
-front_garden = Room("You are in a field with long grass, you can see the sea to the east and a castle in the distance")
-west_field = Room("you are in a field with the broken statues of the past Kngs and Queens of the castle")
-east_field = Room("you see a path to the broken castle tower and the sea to the east")
+front_garden = Room("You are in a field with long grass, you can see a path to the castle left")
+west_field = Room("you are in a field with the broken statues of the past Kngs and Queens of the castle\nthe path continues to the north")
 front_yard = Room("you are in a field with flower bushes an green grass, theres a path to the castle front door")
 ruined_tower = Room("you are surrouned by rubble and the walls are riddled wiht bullet holes, there are guns and a chest in the corner")
 castle_door = Room("Castle Door.  locked, you need a key")
@@ -20,28 +19,26 @@ dungeon = Room("This is a dungeon. you will need a light")
 ##########################
 #ROOM CONNECTIONS
 ##########################
-front_garden.east = east_field
 front_garden.west = west_field
-east_field.north = ruined_tower
 west_field.north = front_yard
 front_yard.east = castle_door
 ruined_tower.west = castle_door	
-
 courtyard.west = dining_room
 courtyard.east = sleeping_quarters
-sleeping_quarters.north = dungeon
-
 ##########################
 #ITEMS
 ##########################
 Item.description = ""
+
+#knife = Item("knife" , "knifes")
+#knife.description = "you wont need these"
+#ruined_tower.Item.add(knife)
 
 key = Item("key", "keys")
 key.description = "you look at the key and see that 'castle doors' is etched into it"
 
 lantern = Item("lantern","light","torch")
 lantern.description = "it is a lantern,it emmits light to be able to see things in dark rooms"
-
 
 ##########################
 #VARIABLES
@@ -51,11 +48,12 @@ chest_open = False
 draws_checked = False
 inventory = Bag()
 used_key = False
+body_searched = False
+bush = False
+code = ""
 ##########################
 #Binds
 ##########################
-
-
 @when("open chest")
 @when("chest")
 def open_chest():
@@ -81,6 +79,25 @@ def open_draws():
 		print("you have already opened the drawers")
 	else:
 		print("there are no drawers here ")
+
+#@when("bushes")
+#@when("bush")
+#def check_bush():
+	#global bush
+	#if current_room == front_yard and bush == False:
+	#	print("you check the bushes and see a  ")
+	#	draws_checked = True 
+	#	dining_room.items.add(lantern)
+   # elif current_room == dining_room and draws_checked == True:
+	#	print("you have already opened the drawers")
+#	else:
+	#	print("there are no drawers here ")
+
+#@when("code")
+#def code():
+	#passcode = int(input("what is the code"))
+	#if passcode == "1863"
+
 
 
 @when("go DIRECTION")
@@ -120,28 +137,38 @@ def use(item):
 		used_key = True 
 		castle_door.north = courtyard
 
-
-
 @when("bookcase")
 def bookcase():
 	if current_room == sleeping_quarters:
 		print("you move the book case a see a stair case")
 		sleeping_quarters.north = dungeon
 		sleeping_quarters.west = ""
+		playsound(door_creak.mp3)
 
-@when("use lantern")
-@when("use light")
+@when("lantern")
+@when("light")
 def use_lantern():
 	if current_room == sleeping_quarters and draws_checked == True:
-		Print("you see a BOOKCASE in the corner and some rows of beds")
-	elif current_room == dungeon and draws_checked == True:
+		print("you see a BOOKCASE in the corner and some rows of beds")
+	if current_room == dungeon and draws_checked == True:
 		print("you see knives and a fresh dead body in the corner")
-	elif current_room == dungeon or sleeping_quarters and draws_checked == False:
-		print("you do not have any source of light")
+		sleeping_quarters.north = ""
+	elif current_room == dungeon and draws_checked == False:
+		print("you do not have a lantern")
+	elif current_room == sleeping_quarters and draws_checked == False:
+		print("you do not have a lantern")
 	else:
-		Print("you cant do that here")
+		print("you cant use that here")
 
-
+@when("search body")
+def Body():
+	if current_room	== dungeon and body_searched == False:
+		print("you see a fresh stab wound in his abdamin and hear a noice behind you like a door creaking")
+		print("you check the man's pockets and find a note saying 'you need to find the key'")
+		print("you look around the room and see a chest covered and has a key hole ")
+		print("you realise yu have athe key that your father gave you before he left and check if it works")
+		print("the chest creaks open and reveals a sword marked with carvings")
+		print("you realise you need to find and exit")
 
 @when("inventory")
 def check_inventory():
@@ -149,19 +176,12 @@ def check_inventory():
 	for item in inventory:
 		print(item)
 
-
-
-
 def main():
+	print("Prelogue")
+	print("You were ten when your Father left, he was archaeologist.")
+	print("you are now 21 and have decided to track his adveture and it has lead you to a remote part of asia")
 	print(current_room)
 	start()
     
 
 main()
-
-
-
-
-
-
-
