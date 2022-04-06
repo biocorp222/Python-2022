@@ -2,19 +2,20 @@
 #IMPORTS
 ########################
 from adventurelib import *
-from playsound import playsound
+from playsound import *
+import webbrowser
 #######################
 #DEFINE ROOMS
 #######################
 Room.items = Bag()
 front_garden = Room("You are in a field with long grass, you can see a path to the castle left")
 west_field = Room("you are in a field with the broken statues of the past Kngs and Queens of the castle\nthe path continues to the north")
-front_yard = Room("you are in a field with flower bushes an green grass, theres a path to the castle front door")
-ruined_tower = Room("you are surrouned by rubble and the walls are riddled wiht bullet holes, there are guns and a chest in the corner")
-castle_door = Room("Castle Door.  locked, you need a key")
+front_yard = Room("you are in a field with flower bushes youcan search and green grass, theres a path to the castle front door to the east")
+ruined_tower = Room("you are surrouned by rubble and the walls are riddled wiht bullet holes, there is a chest in the corner")
+castle_door = Room("Castle Door.  locked, you need a key\nthere is a castle tower to the east")
 courtyard = Room("theres a withered tree in the middle and some bushes and flowers surrounded the tree")
 sleeping_quarters = Room("you need a light source to be able to see in this room")
-dining_room = Room("there is a large table with many chairs surrounding it, there is also a set of drawers")
+dining_room = Room("there is a large table with many chairs surrounding it, there is also a set of drawers\nthere is also a lock on the bottom draw\n""you will need a code""")
 dungeon = Room("This is a dungeon. you will need a light")
 ##########################
 #ROOM CONNECTIONS
@@ -30,9 +31,8 @@ courtyard.east = sleeping_quarters
 ##########################
 Item.description = ""
 
-#knife = Item("knife" , "knifes")
-#knife.description = "you wont need these"
-#ruined_tower.Item.add(knife)
+paper = Item("paper","papers")
+paper.description = "there is a code ghdfe \n can be used in the dining_room "
 
 key = Item("key", "keys")
 key.description = "you look at the key and see that 'castle doors' is etched into it"
@@ -54,6 +54,17 @@ code = ""
 ##########################
 #Binds
 ##########################
+
+@when("look at paper")
+@when("paper")
+def look_paper():
+	if "paper" in inventory:
+		print("there is a code ghdfe \n can be used in the dining room ")
+	else:
+		print("you dont have paper")
+
+
+
 @when("open chest")
 @when("chest")
 def open_chest():
@@ -80,23 +91,36 @@ def open_draws():
 	else:
 		print("there are no drawers here ")
 
-#@when("bushes")
-#@when("bush")
-#def check_bush():
-	#global bush
-	#if current_room == front_yard and bush == False:
-	#	print("you check the bushes and see a  ")
-	#	draws_checked = True 
-	#	dining_room.items.add(lantern)
-   # elif current_room == dining_room and draws_checked == True:
-	#	print("you have already opened the drawers")
-#	else:
-	#	print("there are no drawers here ")
+@when("search bushes")
+@when("search bush")
+@when("bushes")
+@when("bush")
+def check_bush():
+	global bush
+	if current_room == front_yard and bush == False:
+		print("you check the bushes and see a paper ")
+		bush == True
+		front_yard.items.add(paper)
+	elif current_room == front_yard and bush == True:
+		print("you have already opened the bushes")
+	else:
+		print("there are no bushes here ")
 
-#@when("code")
-#def code():
-	#passcode = int(input("what is the code"))
-	#if passcode == "1863"
+@when("code")
+def code():
+	if current_room == dining_room:
+		passcode = (input("what is the code"))
+		if passcode == "ghdfe":
+			url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+			webbrowser.register('chrome',
+				None,
+				webbrowser.BackgroundBrowser("C:\Program Files\Google\Chrome\Application\chrome.exe"))
+			webbrowser.get('chrome').open(url)
+		else:
+			print("incorrect code")
+	else:
+		print("cant do that")
+
 
 
 
@@ -143,7 +167,19 @@ def bookcase():
 		print("you move the book case a see a stair case")
 		sleeping_quarters.north = dungeon
 		sleeping_quarters.west = ""
-		playsound(door_creak.mp3)
+		
+
+
+@when("no")
+def no():
+	url = 'https://www.youtube.com/watch?v=sntGta76v6Y'
+	webbrowser.register('chrome',
+		None,
+		webbrowser.BackgroundBrowser("C:\Program Files\Google\Chrome\Application\chrome.exe"))
+	webbrowser.get('chrome').open(url)
+
+
+
 
 @when("lantern")
 @when("light")
