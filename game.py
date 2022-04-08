@@ -2,20 +2,19 @@
 #IMPORTS
 ########################
 from adventurelib import *
-from playsound import *
 import webbrowser
 #######################
 #DEFINE ROOMS
 #######################
 Room.items = Bag()
-front_garden = Room("You are in a field with long grass, you can see a path to the castle left")
-west_field = Room("you are in a field with the broken statues of the past Kngs and Queens of the castle\nthe path continues to the north")
-front_yard = Room("you are in a field with flower bushes youcan search and green grass, theres a path to the castle front door to the east")
+front_garden = Room("You are in a field with long grass, you can see a path to the castle to the west")
+west_field = Room("you are in a field with the broken statues of the past Kings and Queens of the castle\nthe path continues to the north")
+front_yard = Room("you are in a field with flower bushes that might be hiding a secret and green grass, theres a path to the castle front door to the east")
 ruined_tower = Room("you are surrouned by rubble and the walls are riddled wiht bullet holes, there is a chest in the corner")
 castle_door = Room("Castle Door.  locked, you need a key\nthere is a castle tower to the east")
-courtyard = Room("theres a withered tree in the middle and some bushes and flowers surrounded the tree")
+courtyard = Room("theres a withered tree in the middle and some bushes and flowers surrounded the tree, \nthere is a dining room to the west and the sleeping quarters to the east")
 sleeping_quarters = Room("you need a light source to be able to see in this room")
-dining_room = Room("there is a large table with many chairs surrounding it, there is also a set of drawers\nthere is also a lock on the bottom draw\n""you will need a code""")
+dining_room = Room("there is a large table with many chairs surrounding it, there is also a set of drawers with a light source in them \n you need a code")
 dungeon = Room("This is a dungeon. you will need a light")
 ##########################
 #ROOM CONNECTIONS
@@ -55,6 +54,10 @@ code = ""
 #Binds
 ##########################
 
+
+
+@when("read paper")
+@when("use paper")
 @when("look at paper")
 @when("paper")
 def look_paper():
@@ -63,6 +66,14 @@ def look_paper():
 	else:
 		print("you dont have paper")
 
+@when("i dont consent to death")
+def death():
+	if current_room == dungeon:
+		url = 'https://www.youtube.com/watch?v=CPpECiWvSwQ'
+		webbrowser.register('chrome',
+			None,
+			webbrowser.BackgroundBrowser("C:\Program Files\Google\Chrome\Application\chrome.exe"))
+		webbrowser.get('chrome').open(url)
 
 
 @when("open chest")
@@ -90,7 +101,7 @@ def open_draws():
 		print("you have already opened the drawers")
 	else:
 		print("there are no drawers here ")
-
+@when("look in bushes")
 @when("search bushes")
 @when("search bush")
 @when("bushes")
@@ -106,18 +117,17 @@ def check_bush():
 	else:
 		print("there are no bushes here ")
 
+
+@when("ghdfe")
 @when("code")
+@when("lock")
 def code():
 	if current_room == dining_room:
-		passcode = (input("what is the code"))
-		if passcode == "ghdfe":
 			url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 			webbrowser.register('chrome',
 				None,
 				webbrowser.BackgroundBrowser("C:\Program Files\Google\Chrome\Application\chrome.exe"))
 			webbrowser.get('chrome').open(url)
-		else:
-			print("incorrect code")
 	else:
 		print("cant do that")
 
@@ -143,6 +153,15 @@ def look():
 		for item in current_room.items:
 			print(item)
 
+
+@when("unlock")
+def unlock():
+	if "key" in inventory and current_room == castle_door:
+		print("you use the key and the door opens\nto enter the castle go north")
+		used_key = True 
+		castle_door.north = courtyard
+
+
 @when("get ITEM")
 @when("take ITEM")
 @when("pickup ITEM")
@@ -154,12 +173,7 @@ def get_item(item):
 	else:
 		print(f"you dont see a {item}")
 
-@when("use ITEM")
-def use(item):
-	if item == "key" and current_room == castle_door:
-		print("you use the key and the door opens")
-		used_key = True 
-		castle_door.north = courtyard
+
 
 @when("bookcase")
 def bookcase():
@@ -181,8 +195,8 @@ def no():
 
 
 
-@when("lantern")
-@when("light")
+@when("use lantern")
+@when("use light")
 def use_lantern():
 	if current_room == sleeping_quarters and draws_checked == True:
 		print("you see a BOOKCASE in the corner and some rows of beds")
@@ -196,6 +210,48 @@ def use_lantern():
 	else:
 		print("you cant use that here")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @when("search body")
 def Body():
 	if current_room	== dungeon and body_searched == False:
@@ -205,6 +261,7 @@ def Body():
 		print("you realise yu have athe key that your father gave you before he left and check if it works")
 		print("the chest creaks open and reveals a sword marked with carvings")
 		print("you realise you need to find and exit")
+		dungeon.west = dining_room
 
 @when("inventory")
 def check_inventory():
@@ -221,3 +278,22 @@ def main():
     
 
 main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
