@@ -53,14 +53,12 @@ code = ""
 ##########################
 #Binds
 ##########################
-
-
-
 @when("read paper")
 @when("use paper")
 @when("look at paper")
 @when("paper")
 def look_paper():
+	#look at paper
 	if "paper" in inventory:
 		print("there is a code ghdfe \n can be used in the dining room ")
 	else:
@@ -75,10 +73,10 @@ def death():
 			webbrowser.BackgroundBrowser("C:\Program Files\Google\Chrome\Application\chrome.exe"))
 		webbrowser.get('chrome').open(url)
 
-
 @when("open chest")
 @when("chest")
 def open_chest():
+	#open chest
 	global chest_open
 	if current_room == ruined_tower and chest_open == False:
 		print("you open the chest and see a key")
@@ -92,6 +90,7 @@ def open_chest():
 @when("check drawers")
 @when("drawers")
 def open_draws():
+	#open the drawers
 	global draws_checked
 	if current_room == dining_room and draws_checked == False:
 		print("you open the drawers and see a lantern")
@@ -101,12 +100,14 @@ def open_draws():
 		print("you have already opened the drawers")
 	else:
 		print("there are no drawers here ")
+
 @when("look in bushes")
 @when("search bushes")
 @when("search bush")
 @when("bushes")
 @when("bush")
 def check_bush():
+	#this is a command to look in bushes
 	global bush
 	if current_room == front_yard and bush == False:
 		print("you check the bushes and see a paper ")
@@ -116,7 +117,6 @@ def check_bush():
 		print("you have already opened the bushes")
 	else:
 		print("there are no bushes here ")
-
 
 @when("ghdfe")
 @when("code")
@@ -130,9 +130,6 @@ def code():
 			webbrowser.get('chrome').open(url)
 	else:
 		print("cant do that")
-
-
-
 
 @when("go DIRECTION")
 @when("travel DIRECTION")
@@ -153,14 +150,12 @@ def look():
 		for item in current_room.items:
 			print(item)
 
-
 @when("unlock")
 def unlock():
 	if "key" in inventory and current_room == castle_door:
 		print("you use the key and the door opens\nto enter the castle go north")
 		used_key = True 
 		castle_door.north = courtyard
-
 
 @when("get ITEM")
 @when("take ITEM")
@@ -173,8 +168,6 @@ def get_item(item):
 	else:
 		print(f"you dont see a {item}")
 
-
-
 @when("bookcase")
 def bookcase():
 	if current_room == sleeping_quarters:
@@ -182,8 +175,6 @@ def bookcase():
 		sleeping_quarters.north = dungeon
 		sleeping_quarters.west = ""
 		
-
-
 @when("no")
 def no():
 	url = 'https://www.youtube.com/watch?v=sntGta76v6Y'
@@ -191,9 +182,6 @@ def no():
 		None,
 		webbrowser.BackgroundBrowser("C:\Program Files\Google\Chrome\Application\chrome.exe"))
 	webbrowser.get('chrome').open(url)
-
-
-
 
 @when("use lantern")
 @when("use light")
@@ -210,48 +198,6 @@ def use_lantern():
 	else:
 		print("you cant use that here")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @when("search body")
 def Body():
 	if current_room	== dungeon and body_searched == False:
@@ -262,6 +208,13 @@ def Body():
 		print("the chest creaks open and reveals a sword marked with carvings")
 		print("you realise you need to find and exit")
 		dungeon.west = dining_room
+@when("exit")
+def exit():
+	if current_room == dungeon:
+		print("you find an exit to the west")
+		Quit()
+	else:
+		print("you cant exit")
 
 @when("inventory")
 def check_inventory():
@@ -278,22 +231,3 @@ def main():
     
 
 main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
